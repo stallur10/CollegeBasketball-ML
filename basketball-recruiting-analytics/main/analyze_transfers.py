@@ -115,3 +115,12 @@ if r2 > 0.3:
     save_dir = './models/predict-conf-wins'
     model.save(save_dir)
     print(f"Model saved to {save_dir}")
+
+
+
+
+
+
+
+
+    
