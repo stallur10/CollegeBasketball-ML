@@ -6,7 +6,7 @@ import tensorflow as tf
 from sklearn.metrics import r2_score
 
 # pre-proccess player stats
-stats = pd.read_csv("./data/player_data.csv")
+stats = pd.read_csv("./collegedata/player_data.csv")
 
 stats.columns = [
     "player_name", "team", "conf", "GP", "Min_per", "ORtg", "usg", "eFG", "TS_per", "ORB_per", "DRB_per", 
@@ -74,7 +74,7 @@ X = np.array(X)
 y = np.array(y)
 
 # split into test and train sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=20)
 scaler = StandardScaler()
 X_train = scaler.fit_transform(X_train)
 X_test = scaler.transform(X_test)
@@ -86,15 +86,15 @@ model = tf.keras.Sequential([
     tf.keras.layers.Dense(64, activation='relu'),
     tf.keras.layers.Dense(32, activation='relu'),
     tf.keras.layers.Dense(16, activation='relu'),
-    tf.keras.layers.Dense(16, activation='relu'),
     tf.keras.layers.Dense(8, activation='relu'),
+    tf.keras.layers.Dropout(.6),
     tf.keras.layers.Dense(1, activation='sigmoid') 
 ])
 
 model.compile(optimizer='adam', loss='mse', metrics=['mae'])
 
 # train model
-model.fit(X_train, y_train, epochs=300, batch_size=6, validation_split=0.1, verbose=1)
+model.fit(X_train, y_train, epochs=300, batch_size=8, validation_split=0.1, verbose=1)
 
 
 ### OUTPUT METRICS AND PREDICTIONS ###

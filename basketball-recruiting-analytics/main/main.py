@@ -44,6 +44,7 @@ if illinois_top.shape[0] < MAX_PLAYERS:
 portal_candidates = stats[
     (stats['yr'].str.lower() != 'fr') & 
     (stats['Min_per'] >= 70) & 
+    (stats['Min_per'] < 90) &
     (stats['team'] != TEAM_NAME)
 ]
 
@@ -78,7 +79,7 @@ for _, portal_player in top_portal.iterrows():
     })
 
 # reccommend top 5 players
-top_recommendations = sorted(results, key=lambda x: x["predicted_conf_win_pct"], reverse=True)[:5]
+top_recommendations = sorted(results, key=lambda x: x["predicted_conf_win_pct"], reverse=True)[:10]
 
 print("\nTop 5 Fits for Illinois (Boost Conf Win%):")
 for i, player in enumerate(top_recommendations, 1):
