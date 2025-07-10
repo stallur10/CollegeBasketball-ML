@@ -23,7 +23,7 @@ df_filtered = stats[stats['Min_per'] >= 50]
 # group players by team
 players_by_team = df_filtered.groupby('team')
 
-# pre-proccess team data
+# pre-proccess team Data
 team_df = pd.read_csv('./data/team_data.csv')
 team_df.dropna(subset=['Conf Win%'], inplace=True)
 
@@ -103,14 +103,14 @@ predictions = model.predict(X_test).flatten()
 for i in range(len(predictions)):
     print(f"Predicted: {predictions[i]:.3f}, Actual: {y_test[i]:.3f}")
 
-# Metrics
+# metrics
 loss, mae = model.evaluate(X_test, y_test)
 print(f"Test MSE: {loss:.4f}")
 
 r2 = r2_score(y_test, predictions)
 print(f"R² Score (accuracy): {r2:.4f}")
 
-# Save Model
+# save Model
 if r2 > 0.3:
     save_dir = './models/predict-conf-wins'
     model.save(save_dir)
