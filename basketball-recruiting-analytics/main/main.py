@@ -84,7 +84,7 @@ for _, portal_player in top_portal.iterrows():
         "predicted_conf_win_pct": round(prediction*100, 2)
     })
 
-# reccommend top 5 players
+# reccommend top 10 players
 top_recommendations = sorted(results, key=lambda x: x["predicted_conf_win_pct"], reverse=True)[:10]
 
 print("\nTop 10 Fits for Illinois (Boost Conf Win%):")
