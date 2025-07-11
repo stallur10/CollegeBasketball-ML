@@ -3,8 +3,8 @@ import numpy as np
 import tensorflow as tf
 
 # set vars
-MODEL_PATH = './models/predict-conf-wins'
-PLAYER_DATA_CSV = './data/player_data.csv'
+MODEL_PATH = './basketball-recruiting-analytics/models/predict-conf-wins'
+PLAYER_DATA_CSV = './basketball-recruiting-analytics/data/player_data.csv'
 TEAM_NAME = 'Illinois'
 MAX_PLAYERS = 8
 
@@ -43,6 +43,7 @@ if illinois_top.shape[0] < MAX_PLAYERS:
 # filter all college players
 portal_candidates = stats[
     (stats['yr'].str.lower() != 'fr') & 
+    (stats['yr'].str.lower() != 'sr') & 
     (stats['Min_per'] >= 70) & 
     (stats['Min_per'] < 90) &
     (stats['team'] != TEAM_NAME)
@@ -53,6 +54,11 @@ top_portal = portal_candidates.sort_values(by='Min_per', ascending=False).head(5
 
 # run each potential lineup through the model
 results = []
+
+old_vector = illinois_top.flatten().astype(np.float32).reshape(1, -1)
+prediction = model.predict(old_vector, verbose=0)[0][0]
+print("Predicted Conf Win% with Current Team: ", round(prediction*100, 2))
+
 
 for _, portal_player in top_portal.iterrows():
     candidate_stats = portal_player[PLAYER_FEATURES].values.reshape(1, -1)
@@ -75,13 +81,13 @@ for _, portal_player in top_portal.iterrows():
         "team": portal_player["team"],
         "year": portal_player["yr"],
         "pts": portal_player["pts"],
-        "predicted_conf_win_pct": prediction
+        "predicted_conf_win_pct": round(prediction*100, 2)
     })
 
 # reccommend top 5 players
 top_recommendations = sorted(results, key=lambda x: x["predicted_conf_win_pct"], reverse=True)[:10]
 
-print("\nTop 5 Fits for Illinois (Boost Conf Win%):")
+print("\nTop 10 Fits for Illinois (Boost Conf Win%):")
 for i, player in enumerate(top_recommendations, 1):
     print(f"{i}. {player['player_name']} ({player['team']}, {player['year']}) — "
           f"pts: {player['pts']:.1f}, Pred Conf Win%: {player['predicted_conf_win_pct']:.3f}")

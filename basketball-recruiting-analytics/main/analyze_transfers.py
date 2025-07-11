@@ -18,6 +18,7 @@ stats.columns = [
     "dbpm", "gbpm", "mp", "ogbpm", "dgbpm", "oreb", "dreb", "treb", "ast", "stl", "blk", "pts", "role", 
     "3p/100?"
 ]
+
 df_filtered = stats[stats['Min_per'] >= 50]
 
 # group players by team
